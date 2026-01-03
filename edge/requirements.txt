@@ -1,0 +1,18 @@
+# IoT & Networking
+paho-mqtt==1.6.1
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Google Gemini API
+google-generativeai==0.3.2
+Pillow==10.0.0
+
+# Hardware / Sensors (Raspberry Pi)
+# Note: RPi.GPIO is often pre-installed or needs specific build on ARM, 
+# but gpiozero is a good high-level wrapper.
+gpiozero==2.0
+rpi-lgpio==0.4 ; platform_machine == "aarch64" 
+
+# Audio
+PyAudio==0.2.14
+numpy==1.26.2

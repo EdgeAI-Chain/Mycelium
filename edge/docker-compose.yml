@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # The Core "Mycelium" Brain (running our Python code)
+  edge_logic:
+    build: .
+    container_name: mycelium_edge
+    restart: unless-stopped
+    privileged: true  # CRITICAL: Needed for direct GPIO & Hardware access
+    volumes:
+      - .:/app  # Develop live without rebuilding
+      - /dev/gpiomem:/dev/gpiomem # GPIO Access
+      - /dev/snd:/dev/snd # Audio Access
+    environment:
+      - MQTT_BROKER=mqtt_broker
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - mqtt_broker
+
+  # Local MQTT Broker (The Nervous System)
+  mqtt_broker:
+    image: eclipse-mosquitto:2.0
+    container_name: mycelium_mqtt
+    restart: unless-stopped
+    ports:
+      - "1883:1883" # MQTT Port
+      - "9001:9001" # Websocket Port
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
