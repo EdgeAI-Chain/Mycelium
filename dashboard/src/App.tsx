@@ -1,7 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { useMQTT } from './hooks/useMQTT';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Smartphone, Activity, Droplets, Thermometer, Wind, Leaf } from 'lucide-react';
+import { WeatherPanel } from './components/WeatherPanel';
 
 // Interfaces matching our Python data structure
 interface SensorData {
@@ -28,6 +30,7 @@ interface GeminiAnalysis {
   status: 'healthy' | 'warning' | 'critical';
   analysis: string;
   actions: string[];
+  guests?: { name: string; probability: string; detail: string }[];
 }
 
 function App() {
@@ -131,6 +134,9 @@ function App() {
           </div>
         </div>
 
+        {/* Weather & Solar Panel */}
+        <WeatherPanel />
+
         {/* Gemini Insight Panel */}
         <div className="glass-panel p-6 col-span-3" style={{ gridColumn: 'span 3', background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(16, 185, 129, 0.05) 100%)' }}>
           <div className="flex justify-between items-start mb-4">
@@ -139,7 +145,7 @@ function App() {
             </h3>
             {aiInsight && (
               <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${aiInsight.status === 'healthy' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' :
-                  'bg-amber-500/20 text-amber-400 border border-amber-500/50'
+                'bg-amber-500/20 text-amber-400 border border-amber-500/50'
                 }`}>
                 {aiInsight.status}
               </span>
@@ -150,6 +156,8 @@ function App() {
             {aiInsight ? (
               <div className="animate-in fade-in duration-500">
                 <p className="text-lg leading-relaxed text-gray-200">{aiInsight.analysis}</p>
+
+                {/* Actions Section */}
                 {aiInsight.actions.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-white/5">
                     <p className="text-xs uppercase text-gray-500 font-bold mb-2">Recommended Actions</p>
@@ -158,6 +166,28 @@ function App() {
                         <span key={i} className="px-2 py-1 bg-white/10 rounded text-xs font-mono text-cyan-300">
                           {action}
                         </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Wildlife / Guests Section */}
+                {aiInsight.guests && aiInsight.guests.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/5">
+                    <p className="text-xs uppercase text-rose-400 font-bold mb-2 flex items-center gap-2">
+                      <span className="text-lg">🐞</span> Garden Guests Detected
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {aiInsight.guests.map((guest, i) => (
+                        <div key={i} className="bg-white/5 rounded-lg p-3 border border-white/10 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-rose-500/20 flex-center text-rose-300 font-bold text-lg">
+                            {guest.name[0]}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-gray-200">{guest.name}</p>
+                            <p className="text-xs text-gray-400">{guest.detail}</p>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>

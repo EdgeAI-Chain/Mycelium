@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import mqtt from 'mqtt';
 
-const MQTT_BROKER_URL = 'ws://localhost:9001'; // WebSockets port from mosquitto
-// In production, this would be relative to the domain or configured via env
+// Use environment variable if available, otherwise default to localhost:9001
+const MQTT_BROKER_URL = import.meta.env.VITE_MQTT_BROKER_URL || 'ws://localhost:9001';
 
 export const useMQTT = () => {
     const [client, setClient] = useState<mqtt.MqttClient | null>(null);

@@ -41,6 +41,11 @@ def main():
     # Initialize Gemini
     from gemini_client import GeminiClient
     gemini_brain = GeminiClient()
+    
+    # Initialize Weather
+    from weather_service import WeatherService
+    weather_svc = WeatherService()
+    
     last_gemini_run = 0
 
     # Initialize MQTT
@@ -71,8 +76,10 @@ def main():
                 last_gemini_run = time.time()
                 # Capture Mock Image
                 img = sensor_mgr.capture_image()
-                # Analyze
-                ai_result = gemini_brain.analyze_garden_state(readings, image_path=img)
+                # Get Weather Context
+                wx_context = weather_svc.get_context_string()
+                # Analyze with context
+                ai_result = gemini_brain.analyze_garden_state(readings, image_path=img, weather_context=wx_context)
                 if ai_result:
                     client.publish(TOPIC_GEMINI, json.dumps(ai_result))
                     logger.info(f"Gemini Analysis: {ai_result}")

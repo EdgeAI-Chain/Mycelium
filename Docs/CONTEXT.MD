@@ -1,5 +1,3 @@
-# CLAUDE.MD - AI Assistant Context
-
 ## Project Overview
 
 **Mycelium** is an open-source intelligent garden management system that combines IoT sensors, cloud AI processing (via Google Gemini API), and blockchain integration (BSC) for comprehensive monitoring and automation of traditional gardens, ponds, hydroponics, and aquaponics systems.

@@ -43,6 +43,7 @@ class GeminiPanel(Static):
         yield Label("♊ Gemini Brain Analysis", classes="panel-header")
         yield Static(self.status, id="gemini-status", classes="status-waiting")
         yield Static(self.analysis, id="gemini-content")
+        yield Static("", id="gemini-guests", classes="guests-panel")
 
     def update_insight(self, data):
         self.status = data.get('status', 'UNKNOWN').upper()
@@ -61,6 +62,15 @@ class GeminiPanel(Static):
             status_widget.add_class("status-critical")
             
         self.query_one("#gemini-content").update(self.analysis)
+        
+        # Update guests
+        guests = data.get('guests', [])
+        guest_widget = self.query_one("#gemini-guests")
+        if guests:
+            guest_text = "\n🐞 GUESTS DETECTED:\n" + "\n".join([f"- {g['name']} ({g.get('detail', '')})" for g in guests])
+            guest_widget.update(guest_text)
+        else:
+            guest_widget.update("")
 
 class MyceliumTUI(App):
     """Mycelium Textual Dashboard"""
